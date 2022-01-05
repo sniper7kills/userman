@@ -457,7 +457,7 @@ class Openldap2 extends Auth {
 		$this->connect();
 
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$user = $this->provider->search()->where($this->config['usernameattr'], '=', $username)->in($userdn)->first()
+		$user = $this->provider->search()->where($this->config['usernameattr'], '=', $username)->in($userdn)->first();
 
 		if(is_null($user))
 			return false;
