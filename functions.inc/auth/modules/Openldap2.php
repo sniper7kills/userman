@@ -455,10 +455,14 @@ class Openldap2 extends Auth {
 	 */
 	public function checkCredentials($username, $password) {
 		$this->connect();
-
+		
 		$userdn = !empty($this->config['userdn']) ? $this->config['userdn'].",".$this->config['basedn'] : $this->config['basedn'];
-		$res = $this->provider->auth()->attempt($this->config['usernameattr']."=".$username.",".$userdn, $password);
-
+		$user = $this->provider->search()->where($this->config['usernameattr'], '=', $username)->in($userdn)->first()
+		
+		if(is_null($user))
+			return false;
+		
+		$res = $this->provider->auth()->attempt($user->dn, $password);
 		if($res) {
 			$user = $this->getUserByUsername($username);
 		}
